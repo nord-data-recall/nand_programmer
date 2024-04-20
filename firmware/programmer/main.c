@@ -7,6 +7,7 @@
 #include "usb.h"
 #include "cdc.h"
 #include "led.h"
+#include "log.h"
 #include "uart.h"
 #include "jtag.h"
 #include "version.h"
@@ -21,6 +22,8 @@ int main()
 
     if (!is_external_clock_avail())
         printf("External clock not detected. Fallback to internal clock.\r\n");
+
+    DEBUG_PRINT("Debug active.\n\r");
 
     printf("JTAG init...");
     jtag_init();

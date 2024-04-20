@@ -140,7 +140,7 @@ static void nand_print_fsmc_info()
     DEBUG_PRINT("Erase 1 command: %d\r\n", fsmc_conf.erase1_cmd);
     DEBUG_PRINT("Erase 2 command: %d\r\n", fsmc_conf.erase2_cmd);
     DEBUG_PRINT("Status command: %d\r\n", fsmc_conf.status_cmd);
-    DEBUG_PRINT("Set feature command: %d\r\n", fsmc_conf.set_feature_cmd);
+    DEBUG_PRINT("Set feature command: %d\r\n", fsmc_conf.set_features_cmd);
     DEBUG_PRINT("Enable ECC address: %d\r\n", fsmc_conf.enable_ecc_addr);
     DEBUG_PRINT("Enable ECC value: %d\r\n", fsmc_conf.enable_ecc_value);
     DEBUG_PRINT("Disable ECC value: %d\r\n", fsmc_conf.disable_ecc_value);
@@ -299,12 +299,15 @@ static uint32_t nand_read_data(uint8_t *buf, uint32_t page,
     case 1:
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) =
             ADDR_1st_CYCLE(page_offset);
+	DEBUG_PRINT("COL 1 byte %02X\r\n", ADDR_1st_CYCLE(page_offset));
         break;
     case 2:
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) =
             ADDR_1st_CYCLE(page_offset);
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) =
             ADDR_2nd_CYCLE(page_offset);
+	DEBUG_PRINT("COL 2 bytes %02X %02X\r\n",
+	     ADDR_1st_CYCLE(page_offset), ADDR_2nd_CYCLE(page_offset));
         break;
     case 3:
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) =
@@ -313,6 +316,8 @@ static uint32_t nand_read_data(uint8_t *buf, uint32_t page,
             ADDR_2nd_CYCLE(page_offset);
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) =
             ADDR_3rd_CYCLE(page_offset);
+	DEBUG_PRINT("COL 3 bytes %02X %02X %02X\r\n",
+	     ADDR_1st_CYCLE(page_offset), ADDR_2nd_CYCLE(page_offset), ADDR_3rd_CYCLE(page_offset));
         break;
     case 4:
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) =
@@ -323,6 +328,8 @@ static uint32_t nand_read_data(uint8_t *buf, uint32_t page,
             ADDR_3rd_CYCLE(page_offset);
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) =
             ADDR_4th_CYCLE(page_offset);
+	DEBUG_PRINT("COL 4 bytes %02X %02X %02X %02X\r\n",
+	     ADDR_1st_CYCLE(page_offset), ADDR_2nd_CYCLE(page_offset), ADDR_3rd_CYCLE(page_offset), ADDR_4th_CYCLE(page_offset));
     default:
         break;
     }
@@ -331,21 +338,28 @@ static uint32_t nand_read_data(uint8_t *buf, uint32_t page,
     {
     case 1:
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ADDR_1st_CYCLE(page);
+	DEBUG_PRINT("ROW 1 byte %02X\r\n", ADDR_1st_CYCLE(page));
         break;
     case 2:
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ADDR_1st_CYCLE(page);
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ADDR_2nd_CYCLE(page);
+	DEBUG_PRINT("ROW 2 bytes %02X %02X\r\n",
+	     ADDR_1st_CYCLE(page), ADDR_2nd_CYCLE(page));
         break;
     case 3:
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ADDR_1st_CYCLE(page);
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ADDR_2nd_CYCLE(page);
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ADDR_3rd_CYCLE(page);
+	DEBUG_PRINT("ROW 3 bytes %02X %02X %02X\r\n",
+	     ADDR_1st_CYCLE(page), ADDR_2nd_CYCLE(page), ADDR_3rd_CYCLE(page));
         break;
     case 4:
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ADDR_1st_CYCLE(page);
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ADDR_2nd_CYCLE(page);
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ADDR_3rd_CYCLE(page);
         *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ADDR_4th_CYCLE(page);
+	DEBUG_PRINT("ROW 4 bytes %02X %02X %02X %02X\r\n",
+	     ADDR_1st_CYCLE(page), ADDR_2nd_CYCLE(page), ADDR_3rd_CYCLE(page), ADDR_4th_CYCLE(page));
         break;
     default:
         break;
